@@ -1,5 +1,5 @@
 # Terminal-Prompt
-command line interface from browser
+Remote command line interface from browser
 
 
 ## Dependencies

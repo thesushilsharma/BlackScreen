@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
 });
 
 const port = process.env.Port | 8080;
-server.listen(8080, () => console.log("Server listening on : ", port));
+server.listen(port, () => console.log("Server listening on : ", port));
 
 io.on("connection", socket => {
     console.log("Client connect to socket.", socket.id);

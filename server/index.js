@@ -30,6 +30,13 @@ io.on("connection", (socket) => {
 });
 
 const port = process.env.Port | 8080;
+
+app.use(express.static('client'));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, "/client/index.html"))
+})
+
 server.listen(port, () => console.log("Server listening on : ", port));
 
 io.on("connection", socket => {

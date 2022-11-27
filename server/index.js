@@ -29,8 +29,6 @@ io.on("connection", (socket) => {
     });
 });
 
-const port = process.env.Port | 8080;
-
 app.use(express.static('client'));
 
 app.get('/', (req, res) => {

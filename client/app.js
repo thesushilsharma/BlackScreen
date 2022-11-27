@@ -1,4 +1,5 @@
-const socket = io("ws://localhost:8080");
+//const socket = new io("ws://localhost:8080");
+const socket = new io(location.protocol.replace('http', 'ws') + '//' + location.hostname + (location.port ? (':' + location.port) : '') + '/');
 
 var term = new Terminal(
     {

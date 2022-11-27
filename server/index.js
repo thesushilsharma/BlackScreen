@@ -1,5 +1,5 @@
 const express = require('express'), http = require('http');
-const app = express(); 
+const app = express();
 const server = http.createServer(app);
 
 const pty = require("node-pty");
@@ -34,10 +34,13 @@ const port = process.env.Port | 8080;
 app.use(express.static('client'));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, "/client/index.html"))
+    res.sendFile(path.join(__dirname, "index.html"))
 })
 
-server.listen(port, () => console.log("Server listening on : ", port));
+const port = process.env.Port | 8080;
+server.listen(port, () => {
+    console.log(`Server listening on : ${port}`);
+})
 
 io.on("connection", socket => {
     console.log("Client connect to socket.", socket.id);

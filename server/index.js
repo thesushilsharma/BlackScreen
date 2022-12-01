@@ -1,5 +1,6 @@
 const express = require('express'), http = require('http');
 const app = express();
+const path = require('path');
 const server = http.createServer(app);
 
 const pty = require("node-pty");

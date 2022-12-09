@@ -2,9 +2,9 @@
     "name": "terminalprompt",
     "version": "1.0.0",
     "description": "",
-    "main": "server/index.js",
+    "main": "index.js",
     "scripts": {
-      "start": "nodemon server/index.js"
+      "start": "nodemon index.js"
     },
     "author": "",
     "license": "ISC",

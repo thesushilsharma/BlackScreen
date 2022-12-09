@@ -2,6 +2,7 @@ const express = require('express'), http = require('http');
 const app = express();
 const path = require('path');
 const server = http.createServer(app);
+require("dotenv").config();
 
 const pty = require("node-pty");
 const os = require("os");
@@ -36,7 +37,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"))
 })
 
-const port = process.env.Port | 8080;
+const port = process.env.PORT;
 server.listen(port, () => {
     console.log(`Server listening on : ${port}`);
 })

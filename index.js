@@ -39,8 +39,8 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 const port = process.env.PORT;
 server.listen(port, () => {
-    console.log(`Server listening on : ${port}`);
-})
+    console.log(`Server listening on : ${port}`)
+});
 
 io.on("connection", socket => {
     console.log("Client connect to socket.", socket.id);

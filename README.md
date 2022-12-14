@@ -7,3 +7,10 @@ Remote command line interface from browser
 - [node-pty](https://github.com/microsoft/node-pty)
 - [xtermjs](https://github.com/xtermjs/xterm.js)
 - [Socket.IO](https://socket.io/)
+
+## Use Case
+
+- access server/system terminal from browser
+
+## How to use
+

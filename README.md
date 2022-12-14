@@ -9,8 +9,17 @@ Remote command line interface from browser
 - [Socket.IO](https://socket.io/)
 
 ## Use Case
-
 - access server/system terminal from browser
 
-## How to use
+## How to Start
+- Clone the repo.
+- Run `npm i` -> dependencies (express, node-pty, xterm, socket.io) and devDependencies (nodemon, dotenv)
+- Run `node start`
+- Terminal listening on port `3000`
+- Server will be running at `localhost:3000`
+- Type `localhost:3000` on browser url
 
+## For localhost
+- make changes from app.js
+- uncomment -> `const socket = new io("ws://localhost:8080");`
+- comment -> `const socket = new io(location.protocol.replace('http', 'ws') + '//' + location.hostname + (location.port ? (':' + location.port) : '') + '/');`

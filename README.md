@@ -23,3 +23,12 @@ Remote command line interface from browser
 - make changes from app.js
 - uncomment -> `const socket = new io("ws://localhost:8080");`
 - comment -> `const socket = new io(location.protocol.replace('http', 'ws') + '//' + location.hostname + (location.port ? (':' + location.port) : '') + '/');`
+
+## Known Issues
+- None
+
+## Contributing
+To contribute to this project, please submit any issues or pull requests on the GitHub repository.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.

@@ -1,19 +1,29 @@
 # Terminal-Prompt
-Remote command line interface from browser
+This project allows you to access and interact with your server's terminal from the comfort of your web browser.
+
+## Pre-requisites
+- [Node.JS 12+](https://nodejs.org/en/)
+- VS Code or any Code editor
 
 ## Dependencies
-
-- [Node.JS 12+](https://nodejs.org/en/)
 - [node-pty](https://github.com/microsoft/node-pty)
 - [xtermjs](https://github.com/xtermjs/xterm.js)
 - [Socket.IO](https://socket.io/)
 
-## Use Case
-- access server/system terminal from browser
+## Features
+- Secure communication using WebSockets (Socket.IO)
+- Real-time interaction with the terminal
+- Broad compatibility across operating systems (Linux/macOS, Windows)
 
 ## How to Start
-- Clone the repo.
-- Run `npm i` -> dependencies (express, node-pty, xterm, socket.io) and devDependencies (nodemon, dotenv)
+-   ```bash
+    git clone https://github.com/your-username/web-terminal.git
+    ```
+- ```
+    cd Terminal-Prompt
+    npm i
+  ```
+- Run `npm i` (Installing the dependencies)
 - Run `node start`
 - Terminal listening on port `3000`
 - Server will be running at `localhost:3000`

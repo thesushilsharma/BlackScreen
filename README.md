@@ -31,4 +31,4 @@ Remote command line interface from browser
 To contribute to this project, please submit any issues or pull requests on the GitHub repository.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License.  See the [LICENSE](https://github.com/thesushilsharma/Terminal-Prompt/blob/main/LICENSE) file for details.

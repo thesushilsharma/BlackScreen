@@ -1,4 +1,4 @@
-# Terminal-Prompt
+# BlackScreen
 
 This project allows you to access and interact with your server's terminal from the comfort of your web browser.
 

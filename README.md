@@ -13,6 +13,11 @@ This project allows you to access and interact with your server's terminal from 
 - [xtermjs](https://github.com/xtermjs/xterm.js)
 - [Socket.IO](https://socket.io/)
 
+## Technologies Used
+- [ ] Tailwind CSS
+- [ ] Next Js
+- [ ] Typescript
+
 ## Features
 
 - Secure communication using WebSockets (Socket.IO)

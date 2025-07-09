@@ -27,7 +27,7 @@ This project allows you to access and interact with your server's terminal from 
 ## How to Start
 
 - ```bash
-    git clone https://github.com/thesushilsharma/Terminal-Prompt.git
+    git clone https://github.com/thesushilsharma/BlackScreen.git
   ```
 
 - ```bash

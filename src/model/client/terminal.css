@@ -1,0 +1,9 @@
+section {
+    display: flex;
+    flex-direction: row;
+}
+
+#terminal {
+    height: 300px;
+    width: 50vw;
+}

@@ -1,0 +1,22 @@
+{
+    "name": "blackscreen",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "start": "nodemon index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "express": "^4.18.2",
+      "socket.io": "^4.5.2",
+      "xterm": "^5.0.0",
+      "node-pty": "^0.10.1"
+    },
+    "devDependencies": {
+      "dotenv": "^16.0.3",
+      "nodemon": "^2.0.20"
+    }
+  }
+  

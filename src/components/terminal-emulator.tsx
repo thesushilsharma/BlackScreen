@@ -35,20 +35,21 @@ import {
   Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useDebounce } from "use-debounce";
 
 interface TerminalEmulatorProps {
   className?: string;
 }
 
 export function TerminalEmulator({ className }: TerminalEmulatorProps) {
-  const [theme, setTheme] = useState<"dark" | "light" | "matrix" | "ocean">(
-    "dark"
-  );
+  const [theme, setTheme] = useState<"dark" | "light" | "matrix" | "ocean">("dark");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [terminalSize, setTerminalSize] = useState({
     cols: 120,
     rows: 30,
   });
+  const [debouncedTerminalSize] = useDebounce(terminalSize, 100); // Debounce terminal size updates
+
   const [terminalConfig, setTerminalConfig] = useState({
     cols: terminalSize.cols,
     rows: terminalSize.rows,
@@ -67,48 +68,68 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
     clearTerminal,
   } = useTerminal(terminalConfig);
 
+  // Auto-scroll to bottom on new terminal output
+  useEffect(() => {
+    if (terminal && isConnected) {
+      const disposable = terminal.onData(() => {
+        // Scroll to bottom after a slight delay to ensure content is rendered
+        setTimeout(() => {
+          terminal.scrollToBottom();
+        }, 50);
+      });
+      return () => {
+        disposable.dispose(); // Cleanup the onData listener
+      };
+    }
+  }, [terminal, isConnected]);
+
   // Auto-calculate terminal size based on viewport
   useEffect(() => {
     const calculateTerminalSize = () => {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      
+
       // Calculate optimal columns and rows based on viewport
       const charWidth = 8.4; // Approximate character width in pixels
       const charHeight = 17; // Approximate character height in pixels
-      
+
       const availableWidth = viewportWidth - (isFullscreen ? 80 : 120); // Account for padding
-      const availableHeight = (isFullscreen ? viewportHeight - 140 : Math.min(viewportHeight - 300, 600));
-      
+      const availableHeight = isFullscreen
+        ? viewportHeight - 140
+        : Math.min(viewportHeight - 300, 600);
+
       const cols = Math.floor(availableWidth / charWidth);
       const rows = Math.floor(availableHeight / charHeight);
-      
+
       setTerminalSize({
         cols: Math.max(80, Math.min(cols, 150)), // Min 80, Max 150
-        rows: Math.max(20, Math.min(rows, 50)),  // Min 20, Max 50
+        rows: Math.max(20, Math.min(rows, 50)), // Min 20, Max 50
       });
     };
 
     calculateTerminalSize();
-    window.addEventListener('resize', calculateTerminalSize);
-    return () => window.removeEventListener('resize', calculateTerminalSize);
+    window.addEventListener("resize", calculateTerminalSize);
+    return () => {
+      window.removeEventListener("resize", calculateTerminalSize);
+    };
   }, [isFullscreen]);
 
+  // Update terminal config when debounced terminal size or theme changes
   useEffect(() => {
-    setTerminalConfig(prev => ({
+    setTerminalConfig((prev) => ({
       ...prev,
       theme,
-      cols: terminalSize.cols,
-      rows: terminalSize.rows,
+      cols: debouncedTerminalSize.cols,
+      rows: debouncedTerminalSize.rows,
     }));
-  }, [theme, terminalSize]);
+  }, [theme, debouncedTerminalSize]);
 
+  // Auto-connect terminal
   useEffect(() => {
-    // Auto-connect when terminal is initialized and not already connected
     if (terminal && !isConnected && !isLoading) {
       connectTerminal();
     }
-  }, [terminal, isConnected, isLoading]);
+  }, [terminal, isConnected, isLoading, connectTerminal]);
 
   const handleConnect = () => {
     if (isConnected) {
@@ -120,7 +141,6 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
 
   const handleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
-    // Resize terminal after fullscreen toggle
     setTimeout(() => {
       resizeTerminal();
     }, 150);
@@ -132,9 +152,8 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
       if (selection) {
         try {
           await navigator.clipboard.writeText(selection);
-          // You could add a toast notification here
         } catch (err) {
-          console.error('Failed to copy text:', err);
+          console.error("Failed to copy text:", err);
         }
       }
     }
@@ -179,11 +198,14 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
           className
         )}
       >
-        <Card className={cn(
-          "flex-1 flex flex-col border-2 shadow-2xl backdrop-blur-sm",
-          "bg-gradient-to-br", themeColors[theme],
-          "border-border/30 hover:border-border/50 transition-all duration-300"
-        )}>
+        <Card
+          className={cn(
+            "flex-1 flex flex-col border-2 shadow-2xl backdrop-blur-sm",
+            "bg-gradient-to-br",
+            themeColors[theme],
+            "border-border/30 hover:border-border/50 transition-all duration-300"
+          )}
+        >
           <CardHeader className="px-6 py-4 border-b bg-background/80 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -198,9 +220,9 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
                     </p>
                   </div>
                 </div>
-                
+
                 <Separator orientation="vertical" className="h-10" />
-                
+
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-2">
                     <div className={cn("w-3 h-3 rounded-full", statusColor)} />
@@ -216,10 +238,7 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
               </div>
 
               <div className="flex items-center gap-2">
-                <Select
-                  value={theme}
-                  onValueChange={(value: any) => setTheme(value)}
-                >
+                <Select value={theme} onValueChange={(value: any) => setTheme(value)}>
                   <SelectTrigger className="w-36 h-9 bg-background/50">
                     <Palette className="w-4 h-4 mr-2" />
                     <SelectValue />
@@ -313,9 +332,7 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
                       )}
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>
-                    {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-                  </TooltipContent>
+                  <TooltipContent>{isFullscreen ? "Exit Fullscreen" : "Fullscreen"}</TooltipContent>
                 </Tooltip>
 
                 <Tooltip>
@@ -340,15 +357,13 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
                       )}
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>
-                    {isConnected ? "Disconnect Terminal" : "Connect Terminal"}
-                  </TooltipContent>
+                  <TooltipContent>{isConnected ? "Disconnect Terminal" : "Connect Terminal"}</TooltipContent>
                 </Tooltip>
               </div>
             </div>
           </CardHeader>
 
-          <CardContent className="flex-1 p-0 overflow-hidden relative">
+          <CardContent className="flex-1 p-0 overflow-auto relative">
             {error && (
               <div className="absolute top-0 left-0 right-0 z-10 bg-destructive/10 border-l-4 border-destructive p-4 text-destructive text-sm backdrop-blur-sm">
                 <div className="flex items-center gap-2">
@@ -363,15 +378,16 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
               className={cn(
                 "w-full h-full focus:outline-none transition-all duration-300",
                 "bg-gradient-to-br from-black/95 to-black/90",
-                error && "mt-16"
+                error && "pt-16"
               )}
               style={{
-                minHeight: isFullscreen ? "calc(100vh - 200px)" : "500px",
-                maxHeight: isFullscreen ? "calc(100vh - 200px)" : "70vh",
+                minHeight: isFullscreen ? "calc(100vh - 140px)" : "500px",
+                maxHeight: isFullscreen ? "calc(100vh - 140px)" : "70vh",
+                overflowY: "auto",
+                contain: "strict",
               }}
             />
 
-            {/* Loading overlay */}
             {isLoading && (
               <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
                 <div className="flex items-center gap-3 text-lg">
@@ -381,7 +397,6 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
               </div>
             )}
 
-            {/* Terminal info overlay */}
             {!isLoading && !isConnected && (
               <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
                 <div className="text-center space-y-4">
@@ -402,7 +417,6 @@ export function TerminalEmulator({ className }: TerminalEmulatorProps) {
           </CardContent>
         </Card>
 
-        {/* Terminal info footer */}
         <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-4">
             <span>Terminal Size: {terminalSize.cols}×{terminalSize.rows}</span>
